@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Go Networking Diagram</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #111;
+        color: #eee;
+        padding: 20px;
+    }
+    h1 {
+        color: #ff8c00;
+    }
+    .diagram {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 40px;
+    }
+    .box {
+        background-color: #222;
+        border: 2px solid #ff8c00;
+        padding: 20px;
+        width: 40%;
+        border-radius: 8px;
+    }
+    pre {
+        background-color: #333;
+        padding: 10px;
+        border-radius: 5px;
+        overflow-x: auto;
+    }
+    .arrow {
+        font-size: 24px;
+        margin: 0 20px;
+        align-self: center;
+    }
+</style>
+</head>
+<body>
+    <h1>Go Networking Flow: Server & Client</h1>
+
+    <div class="diagram">
+        <div class="box">
+            <h2>Go Server</h2>
+            <p><strong>TCP:</strong> Reliable connection for login/chat</p>
+            <pre>
+ln, _ := net.Listen("tcp", ":7777")
+for {
+    conn, _ := ln.Accept()
+    go handleConnection(conn)
+}
+            </pre>
+            <p><strong>UDP:</strong> Fast updates for positions/movement</p>
+            <pre>
+addr, _ := net.ResolveUDPAddr("udp", ":7777")
+conn, _ := net.ListenUDP("udp", addr)
+buf := make([]byte, 1024)
+for {
+    n, clientAddr, _ := conn.ReadFromUDP(buf)
+}
+            </pre>
+        </div>
+
+        <div class="arrow">⇄</div>
+
+        <div class="box">
+            <h2>C# Client</h2>
+            <p><strong>TCP:</strong> Connect to server</p>
+            <pre>
+TcpClient client = new TcpClient("localhost", 7777);
+NetworkStream stream = client.GetStream();
+byte[] message = Encoding.ASCII.GetBytes("Hello Server");
+stream.Write(message, 0, message.Length);
+            </pre>
+            <p><strong>UDP:</strong> Send movement updates</p>
+            <pre>
+UdpClient udp = new UdpClient();
+IPEndPoint serverEP = new IPEndPoint(IPAddress.Loopback, 7777);
+byte[] data = Encoding.ASCII.GetBytes("PlayerMove:x=10,y=20");
+udp.Send(data, data.Length, serverEP);
+            </pre>
+        </div>
+    </div>
+
+    <p style="margin-top: 40px;">
+        <strong>Flow Explanation:</strong> TCP handles reliable messages like login or chat, while UDP handles real-time updates like positions. The arrows show bidirectional communication between Go server and C# client.
+    </p>
+</body>
+</html>
