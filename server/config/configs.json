@@ -1,5 +1,5 @@
 {
-    "server_port": 1660,
+    "server_port": 9000,
     "tick_rate": 60,
     "max_players": 100
 }

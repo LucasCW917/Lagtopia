@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TCP Router Documentation</title>
+<style>
+body { font-family: sans-serif; margin: 2em; line-height: 1.6; }
+code { background-color: #f0f0f0; padding: 2px 4px; border-radius: 4px; }
+pre { background-color: #f8f8f8; padding: 1em; border-radius: 6px; }
+h2 { color: #2c3e50; }
+</style>
+</head>
+<body>
+<h1>TCP Router Documentation</h1>
+
+<p>This TCP router allows multiple services to communicate via standardized commands. It is language-agnostic and works with Go, Python, or any language that implements the length-prefixed framing protocol.</p>
+
+<h2>Supported Commands</h2>
+<ul>
+<li><b>REGISTER &lt;SERVICE_NAME&gt;</b> - Registers a service with the router.</li>
+<li><b>UNREGISTER &lt;SERVICE_NAME&gt;</b> - Unregisters a service.</li>
+<li><b>SENDTO &lt;SERVICE&gt; "&lt;payload&gt;"</b> - Sends a message to a specific service.</li>
+<li><b>BROADCAST "&lt;payload&gt;"</b> - Sends a message to all connected services.</li>
+<li><b>PING</b> - Router replies with <code>PONG</code>.</li>
+<li><b>LIST</b> - Returns all registered services.</li>
+</ul>
+
+<h2>Message Framing</h2>
+<p>All messages are sent as <b>4-byte big endian length prefix</b> + <b>message bytes</b>.</p>
+
+<pre>
++-----------------+---------------------+
+| 4 bytes length  | message payload     |
++-----------------+---------------------+
+</pre>
+
+<h2>Using From Go</h2>
+<pre>
+conn, _ := net.Dial("tcp", "localhost:9000")
+defer conn.Close()
+
+writeMessage(conn, "REGISTER LOGIN")
+writeMessage(conn, `SENDTO SERVER "login:TRUE"`)
+</pre>
+
+<h2>Using From Python</h2>
+<pre>
+import socket, struct
+
+def send_message(sock, msg):
+    data = msg.encode()
+    length = struct.pack('>I', len(data))
+    sock.sendall(length + data)
+
+def recv_message(sock):
+    length = struct.unpack('>I', sock.recv(4))[0]
+    return sock.recv(length).decode()
+
+sock = socket.create_connection(('localhost', 9000))
+send_message(sock, "REGISTER LOGIN")
+send_message(sock, 'SENDTO SERVER "login:TRUE"')
+response = recv_message(sock)
+print(response)
+</pre>
+
+<h2>Notes</h2>
+<ul>
+<li>Router automatically removes services that disconnect.</li>
+<li>All payloads are strings; parsing is up to the service.</li>
+<li>Maximum message size: 1MB.</li>
+<li>Errors are returned in the format: <code>ERROR &lt;message&gt;</code></li>
+</ul>
+
+</body>
+</html>
