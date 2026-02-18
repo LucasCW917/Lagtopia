@@ -53,6 +53,7 @@ func main() {
 		log.Fatal(err)
 	}
 	defer conn.Close()
+	defer log.Println("Connection with server closed")
 
 	writeMessage(conn, "REGISTER SERVER")
 	log.Println("Server registered with TCP router under name 'SERVER'")
