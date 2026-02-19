@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lagtopia System Overview</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0d0d0d;
+            color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #ff3c6e;
+            text-align: center;
+        }
+        .component {
+            border: 2px solid #444;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            background-color: #1a1a1a;
+        }
+        .component h2 {
+            color: #00d1ff;
+            margin-top: 0;
+        }
+        .description {
+            font-size: 1.1em;
+            line-height: 1.6em;
+        }
+        ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lagtopia System Overview</h1>
+
+    <div class="component">
+        <h2>Backbone 😀</h2>
+        <div class="description">
+            The all-seeing router and brain of the system. Manages live TCP connections, tracks clients, 
+            and handles tokens. Sends events to the dashboard so you can see everything happening in real time.
+            <ul>
+                <li>Tracks connected clients</li>
+                <li>Manages token issuance and verification</li>
+                <li>Streams events to Backpanel</li>
+                <li>Filters or throttles info to avoid chaos</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="component">
+        <h2>Backpanel 👁️</h2>
+        <div class="description">
+            Your hacker-cool dashboard, built with a TUI. Displays live client connections, tokens, and logs.
+            Can also take CLI-style commands for direct interaction with Backbone.
+            <ul>
+                <li>Shows connected clients</li>
+                <li>Displays token status and stats</li>
+                <li>Logs events and alerts</li>
+                <li>CLI input for commands like kick or regenerate tokens</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="component">
+        <h2>Spine 💀</h2>
+        <div class="description">
+            The SQL persistence layer. Stores token states, logs, and history, so nothing is lost when the 
+            system restarts. Allows historical queries and analytics.
+            <ul>
+                <li>Records token and client history</li>
+                <li>Stores event logs</li>
+                <li>Enables historical queries and analytics</li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>
